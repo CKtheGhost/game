@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quantum Scientist - Advanced 3D Character System</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background-color: #000;
+      font-family: 'Arial', sans-serif;
+    }
+    
+    /* Loading screen */
+    #loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #000033;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      color: white;
+      transition: opacity 1s ease-in-out;
+    }
+    
+    #loading-progress {
+      width: 300px;
+      height: 10px;
+      background-color: #111;
+      border-radius: 5px;
+      margin: 20px 0;
+      overflow: hidden;
+    }
+    
+    #progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #00ffff, #ff00ff);
+      transition: width 0.3s ease-in-out;
+    }
+    
+    #loading-text {
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    
+    h1 {
+      font-size: 2.5em;
+      background: linear-gradient(90deg, #00ffff, #ff00ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0;
+    }
+    
+    .subtitle {
+      font-size: 1.2em;
+      opacity: 0.7;
+      margin-bottom: 30px;
+    }
+    
+    /* Interaction prompt */
+    #interaction-prompt {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      display: none;
+      pointer-events: none;
+    }
+    
+    /* Ability cooldown indicators */
+    #ability-cooldowns {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 20px;
+      z-index: 1000;
+    }
+    
+    .ability-icon {
+      width: 50px;
+      height: 50px;
+      background-color: rgba(0, 0, 0, 0.5);
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .ability-icon .key {
+      position: absolute;
+      top: -10px;
+      left: -10px;
+      background-color: #00aaff;
+      color: white;
+      font-size: 12px;
+      padding: 2px 5px;
+      border-radius: 3px;
+    }
+    
+    .cooldown-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      transition: height 0.1s linear;
+    }
+    
+    .ability-icon img {
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <h1>Quantum Scientist</h1>
+    <div class="subtitle">Advanced 3D Character System</div>
+    <div id="loading-progress">
+      <div id="progress-bar"></div>
+    </div>
+    <div id="loading-text">Initializing quantum systems...</div>
+  </div>
+  
+  <!-- Interaction Prompt -->
+  <div id="interaction-prompt">Press E to interact</div>
+  
+  <!-- Ability Cooldown Indicators -->
+  <div id="ability-cooldowns">
+    <div class="ability-icon" data-ability="phaseShift">
+      <div class="key">Q</div>
+      <div class="cooldown-overlay" style="height: 0%"></div>
+      <div>Phase</div>
+    </div>
+    <div class="ability-icon" data-ability="timeDilation">
+      <div class="key">R</div>
+      <div class="cooldown-overlay" style="height: 0%"></div>
+      <div>Time</div>
+    </div>
+    <div class="ability-icon" data-ability="molecularReconstruction">
+      <div class="key">T</div>
+      <div class="cooldown-overlay" style="height: 0%"></div>
+      <div>Recon</div>
+    </div>
+    <div class="ability-icon" data-ability="quantumTeleportation">
+      <div class="key">Y</div>
+      <div class="cooldown-overlay" style="height: 0%"></div>
+      <div>Tele</div>
+    </div>
+  </div>
+  
+  <script>
+    // Simulate loading progress
+    document.addEventListener('DOMContentLoaded', () => {
+      const progressBar = document.getElementById('progress-bar');
+      const loadingText = document.getElementById('loading-text');
+      const loadingScreen = document.getElementById('loading-screen');
+      
+      let progress = 0;
+      const loadingTexts = [
+        'Initializing quantum systems...',
+        'Calibrating phase shift modules...',
+        'Aligning dimensional pathways...',
+        'Stabilizing temporal fluctuations...',
+        'Charging quantum energy cells...',
+        'Configuring molecular reconstruction algorithms...',
+        'Establishing entanglement network...',
+        'Ready to enter the quantum realm!'
+      ];
+      
+      const interval = setInterval(() => {
+        progress += Math.random() * 10;
+        
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+          
+          // Hide loading screen after a short delay
+          setTimeout(() => {
+            loadingScreen.style.opacity = '0';
+            setTimeout(() => {
+              loadingScreen.style.display = 'none';
+            }, 1000);
+          }, 500);
+        }
+        
+        progressBar.style.width = `${progress}%`;
+        
+        // Update loading text
+        const textIndex = Math.floor((progress / 100) * (loadingTexts.length - 1));
+        loadingText.textContent = loadingTexts[textIndex];
+      }, 300);
+    });
+  </script>
+  
+  <div id="root"></div>
+</body>
+</html>
